@@ -6,19 +6,16 @@ import {
   combineReducers,
 } from "redux";
 
-const makeLouder = (string) => string.toUpperCase();
+const initialState = {
+  value: 0,
+};
 
-const repeatthreeTimes = (string) => string.repeat(3);
+const reducer = (state, action) => {
+  return state;
+};
 
-const embolden = (string) => string.bold();
+const incrementAction = { type: "INCREMENT" };
 
-// const makeLouderThreeTimesAndEmbolden = (string) =>
-//   embolden(repeatthreeTimes(makeLouder(string)));
+const store = createStore(reducer);
 
-const makeLouderThreeTimesAndEmbolden = compose(
-  embolden,
-  repeatthreeTimes,
-  makeLouder
-);
-
-console.log(makeLouderThreeTimesAndEmbolden("hello"));
+console.log(store);
