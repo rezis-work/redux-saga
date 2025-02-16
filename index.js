@@ -7,43 +7,66 @@ import {
 } from "redux";
 
 const initialState = {
-  value: 0,
+  users: [
+    {
+      id: 1,
+      name: "Maia",
+    },
+    {
+      id: 2,
+      name: "John",
+    },
+  ],
+  tasks: [
+    {
+      title: "File the taxes report",
+    },
+    {
+      title: "Buy groceries",
+    },
+  ],
 };
 
-const INCREMENT = "INCREMENT";
-const ADD = "ADD";
-const increment = () => ({ type: INCREMENT });
-const add = (amount) => ({ type: ADD, payload: amount });
+const ADD_USER = "ADD_USER";
+const ADD_TASK = "ADD_TASK";
 
-const reducer = (state = initialState, action) => {
-  if (action.type === INCREMENT) {
-    return { value: state.value + 1 };
+const addUser = (user) => ({ type: ADD_USER, payload: user });
+const addTask = (task) => ({ type: ADD_TASK, payload: task });
+
+const userReducer = (users = initialState.users, action) => {
+  if (action.type === ADD_USER) {
+    return [...users, action.payload];
   }
-  if (action.type === ADD) {
-    return { value: state.value + action.payload };
-  }
-  return state;
+
+  return users;
 };
+
+const taskReducer = (tasks = initialState.tasks, action) => {
+  if (action.type === ADD_TASK) {
+    return [...tasks, action.payload];
+  }
+
+  return tasks;
+};
+
+const reducer = combineReducers({
+  users: userReducer,
+  tasks: taskReducer,
+});
+
+// const reducer = (state, action) => {
+//   if (action.type === ADD_USER) {
+//     return { ...state, users: [...state.users, action.payload] };
+//   }
+//   if (action.type === ADD_TASK) {
+//     return { ...state, tasks: [...state.tasks, action.payload] };
+//   }
+// };
 
 const store = createStore(reducer);
 
-// 1. create a subscriber
+store.subscribe(() => {
+  console.log(store.getState());
+});
 
-const subscriber = () => console.log("SUBSCRIBER", store.getState());
-
-store.subscribe(subscriber);
-
-// actions bind
-
-const actions = bindActionCreators({ increment, add }, store.dispatch);
-
-// const dispatchAdd = compose(store.dispatch, add);
-// const [dispatchIncrement, dispatchAdd] = [increment, add].map((fn) =>
-//   compose(store.dispatch, fn)
-// );
-
-// dispatchAdd(1000);
-// dispatchIncrement();
-
-actions.add(1000);
-actions.increment();
+store.dispatch(addUser({ id: 3, name: "Jane" }));
